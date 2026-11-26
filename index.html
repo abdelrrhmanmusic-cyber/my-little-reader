@@ -134,6 +134,8 @@ footer{background:var(--purple);color:#fff;padding:36px 6vw;display:grid;grid-te
 .shr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0;color:var(--text)}
 .shr input{width:110px!important}
 .anote{color:var(--text);text-align:start;font-weight:400}
+.card img[data-buy]{cursor:pointer}
+@media(max-width:640px){#grid{display:flex;flex-direction:column-reverse;align-items:center}#grid .card{width:100%;max-width:340px}}
 </style>
 </head>
 <body>
@@ -204,11 +206,11 @@ function render(){
  document.querySelectorAll("[data-i18n]").forEach(function(e){e.textContent=t[e.dataset.i18n]});
  document.getElementById("lang").textContent=t.lang;
  document.getElementById("theme").innerHTML=S.theme=="light"?MOON:SUN;
- document.getElementById("grid").innerHTML=BOOKS.map(function(b){return '<div class="card"><img src="'+b.img+'" alt="'+t["b"+b.id]+'"><h3>'+t["b"+b.id]+'</h3><div class="price">'+pr(b.id)+' '+t.cur+'</div><div class="row"><button class="btn pri" data-buy="'+b.id+'">'+t.buy+'</button><button class="btn add" data-add="'+b.id+'">'+t.add+'</button></div></div>'}).join("");
+ document.getElementById("grid").innerHTML=BOOKS.map(function(b){return '<div class="card"><img data-buy="'+b.id+'" src="'+b.img+'" alt="'+t["b"+b.id]+'"><h3>'+t["b"+b.id]+'</h3><div class="price">'+pr(b.id)+' '+t.cur+'</div><div class="row"><button class="btn pri" data-buy="'+b.id+'">'+t.buy+'</button><button class="btn add" data-add="'+b.id+'">'+t.add+'</button></div></div>'}).join("");
  count();
  route(false);
 }
-function count(){var n=0;for(var k in S.cart)n+=S.cart[k]>0?1:0;document.getElementById("count").textContent=n}
+function count(){var n=0;BOOKS.forEach(function(b){if(S.cart[b.id]>0)n++});document.getElementById("count").textContent=n}
 function order(){
  var t=T[S.lang],l=[];
  BOOKS.forEach(function(b){if(S.cart[b.id])l.push("• "+t["b"+b.id]+" × "+S.cart[b.id])});
@@ -223,7 +225,7 @@ document.addEventListener("click",function(e){
 });
 document.getElementById("lang").onclick=function(){flash(this);S.lang=S.lang=="ar"?"en":"ar";save();render()};
 document.getElementById("theme").onclick=function(){flash(this);S.theme=S.theme=="light"?"dark":"light";save();render();flash(document.getElementById("theme"))};
-document.getElementById("cartBtn").onclick=function(){location.hash="cart"};
+document.getElementById("cartBtn").onclick=function(){var n=0;BOOKS.forEach(function(b){if(S.cart[b.id]>0)n++});if(!n){toast(C[S.lang].empty,false);return}location.hash="cart"};
 document.querySelectorAll(".wal").forEach(function(a){a.href="https://wa.me/"+PHONE});
 var cur={id:0,i:0};
 var GOV=[["القاهرة","Cairo",65],["الجيزة","Giza",65],["القليوبية","Qalyubia",65],["الإسكندرية","Alexandria",70],["بورسعيد","Port Said",80],["السويس","Suez",80],["الإسماعيلية","Ismailia",80],["دمياط","Damietta",80],["الدقهلية","Dakahlia",75],["الشرقية","Sharqia",75],["الغربية","Gharbia",75],["كفر الشيخ","Kafr El Sheikh",75],["المنوفية","Monufia",75],["البحيرة","Beheira",75],["الفيوم","Fayoum",80],["بني سويف","Beni Suef",80],["المنيا","Minya",85],["أسيوط","Asyut",90],["سوهاج","Sohag",90],["قنا","Qena",95],["الأقصر","Luxor",95],["أسوان","Aswan",100],["البحر الأحمر","Red Sea",100],["الوادي الجديد","New Valley",120],["مطروح","Matrouh",100],["شمال سيناء","North Sinai",120],["جنوب سيناء","South Sinai",110]];
@@ -284,7 +286,7 @@ document.addEventListener("click",function(e){
  if(0){var t=T[S.lang];window.open("https://wa.me/"+PHONE+"?text="+encodeURIComponent(t.msg+"\n• "+t["b"+ck.dataset.chk]+" × 1"),"_blank")}
 });
 window.addEventListener("hashchange",function(){route(true)});
-var C={ar:{empty:"السلة فاضية",cont:"متابعة التسوق",added:"تم إضافة المنتج إلى السلة بنجاح",dup:"المنتج في السلة بالفعل",rm:"إلغاء المنتج"},en:{empty:"Your cart is empty",cont:"Continue Shopping",added:"Product added to cart successfully",dup:"Product is already in the cart",rm:"Remove"}};
+var C={ar:{empty:"السلة فارغة",cont:"متابعة التسوق",added:"تم إضافة المنتج إلى السلة بنجاح",dup:"المنتج في السلة بالفعل",rm:"إلغاء المنتج"},en:{empty:"Your cart is empty",cont:"Continue Shopping",added:"Product added to cart successfully",dup:"Product is already in the cart",rm:"Remove"}};
 var tt_;
 function toast(msg,ok){
  var d=document.getElementById("toast");if(d)d.remove();clearTimeout(tt_);
@@ -333,7 +335,7 @@ async function loadRemote(){
  try{
   var r=await Promise.all([db.doc("settings/main").get(),db.collection("products").get(),db.doc("shipping/main").get()]);
   var s=r[0].exists?r[0].data():null,g=r[2].exists?r[2].data().list:null;
-  var p=r[1].docs.map(function(d){return d.data()}).sort(function(a,b){return (a.sort||0)-(b.sort||0)||a.id-b.id});
+  var p=r[1].docs.map(function(d){return d.data()}).sort(function(a,b){return a.id-b.id});
   if(s){if(s.phone)PHONE=s.phone;
    if(s.site_name){document.querySelector(".brand span").textContent=s.site_name;document.querySelector(".fbrand strong").textContent=s.site_name;document.title=s.site_name}
    if(s.facebook)document.querySelector('.soc a[aria-label="Facebook"]').href=s.facebook;

@@ -80,6 +80,7 @@ footer{background:var(--purple);color:#fff;padding:36px 6vw;display:grid;grid-te
 .pwrap h2{color:var(--head)}
 .big{font-size:1.7rem;font-weight:800;color:var(--accent);margin:4px 0 18px;font-family:'Baloo Bhaijaan 2','Cairo',sans-serif}
 .chk{display:inline-flex;align-items:center;gap:10px}
+.prow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}.prow .btn{flex:1 1 140px;justify-content:center;text-align:center;cursor:pointer;border:2px solid var(--coral);padding:12px 8px;font-size:.95rem;white-space:nowrap}.prow .chk{gap:6px}.prow .chk svg{width:20px;height:20px}.prow .add{background:var(--coral);color:#fff;display:inline-flex;align-items:center}
 .dt{color:var(--head);font-size:1.5rem;margin:40px 0 8px;text-align:start}
 .desc{text-align:start;color:#2b2233;font-weight:400}
 :root[data-theme="dark"] .desc{color:var(--text)}
@@ -94,7 +95,7 @@ footer{background:var(--purple);color:#fff;padding:36px 6vw;display:grid;grid-te
 .qrow{margin-top:14px}
 .qc{display:flex;align-items:center;gap:6px}
 .qc button{width:34px;height:34px;border-radius:10px;background:var(--bg);color:var(--head);font-size:1.3rem;font-weight:700}
-.qc span{min-width:36px;font-weight:800;font-size:1.1rem}
+.qc span{min-width:36px;text-align:center;font-weight:800;font-size:1.1rem}
 #order hr{border:0;border-top:1px solid #e6dcef;margin:14px 0}
 .tot{color:var(--accent)!important;font-weight:800;font-size:1.2rem}
 .cod{color:var(--accent);font-weight:600;margin-top:6px}
@@ -103,6 +104,7 @@ footer{background:var(--purple);color:#fff;padding:36px 6vw;display:grid;grid-te
 .ocard input,.ocard textarea,.sel{width:100%;border:1.5px solid #e4d8ee;border-radius:12px;padding:12px;background:var(--bg);color:var(--text);font:inherit;font-weight:400}
 .ocard input:focus,.ocard textarea:focus{outline:2px solid var(--coral)}
 .dd{position:relative}
+.shl{align-items:flex-start;gap:12px}.shl>span:first-child{padding-top:12px}.shl .dd{flex:0 1 66%;min-width:0}.shl .sel{padding:10px 12px;font-size:.95rem}
 .sel{display:flex;align-items:center;gap:10px;cursor:pointer;text-align:start}
 .sel span:first-child{flex:1}.sel span+span{color:var(--accent);font-weight:600}
 .list{position:absolute;inset-inline:0;top:calc(100% + 4px);max-height:260px;overflow:auto;background:var(--surface);border:1.5px solid #e4d8ee;border-radius:12px;z-index:5;box-shadow:var(--shadow)}
@@ -236,8 +238,8 @@ function money(n){return n+" "+T[S.lang].cur}
 function showOrder(id){
  if(ord.id!=id)ord={id:id,qty:1,gov:-1,name:"",phone:"",addr:""};
  var t=T[S.lang],o=O[S.lang],ix=S.lang=="ar"?0:1;
- document.getElementById("order").innerHTML='<div class="ocard sum"><h2>'+o.os+'</h2><img class="oimg" src="'+B(id).img+'" alt=""><h3 class="on">'+t["b"+id]+'</h3><div class="op">'+money(pr(id))+'</div><div class="ln qrow"><b>'+o.qty+'</b><div class="qc" dir="ltr"><button data-q="-1" aria-label="-">−</button><span id="q"></span><button data-q="1" aria-label="+">+</button></div></div><hr><div class="ln"><span>'+o.sub+'</span><span id="sb"></span></div><div class="ln"><span>'+o.ship+'</span><span id="sh"></span></div><div class="ln tot"><span>'+o.tot+'</span><span id="tt"></span></div><div class="cod">'+o.cod+'</div></div>'+
- '<div class="ocard"><h2>'+o.ci+'</h2><label>'+o.nm+'</label><input id="f-name" value="'+esc(ord.name)+'" placeholder="'+o.nmp+'"><label>'+o.ph+'</label><input id="f-phone" type="tel" inputmode="tel" value="'+esc(ord.phone)+'" placeholder="'+o.php+'"><label>'+o.ad+'</label><textarea id="f-addr" rows="2" placeholder="'+o.adp+'">'+esc(ord.addr)+'</textarea><label>'+o.gv+'</label><div class="dd"><button type="button" class="sel"><span id="gn"></span><span id="gp"></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="list" id="gl" hidden>'+GOV.map(function(g,k){return '<div class="opt" data-g="'+k+'"><span>'+g[ix]+'</span><span>'+money(g[2])+'</span></div>'}).join("")+'</div></div><button class="btn pri conf" data-send>'+o.conf+'</button></div>';
+ document.getElementById("order").innerHTML='<div class="ocard sum"><h2>'+o.os+'</h2><img class="oimg" src="'+B(id).img+'" alt=""><h3 class="on">'+t["b"+id]+'</h3><div class="op">'+money(pr(id))+'</div><div class="ln qrow"><b>'+o.qty+'</b><div class="qc" dir="ltr"><button data-q="-1" aria-label="-">−</button><span id="q"></span><button data-q="1" aria-label="+">+</button></div></div><hr><div class="ln"><span>'+o.sub+'</span><span id="sb"></span></div><div class="ln shl"><span>'+o.ship+'</span><div class="dd"><button type="button" class="sel"><span id="gn"></span><span id="gp"></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="list" id="gl" hidden>'+GOV.map(function(g,k){return '<div class="opt" data-g="'+k+'"><span>'+g[ix]+'</span><span>'+money(g[2])+'</span></div>'}).join("")+'</div></div><span id="sh" hidden></span></div><div class="ln tot"><span>'+o.tot+'</span><span id="tt"></span></div><div class="cod">'+o.cod+'</div></div>'+
+ '<div class="ocard"><h2>'+o.ci+'</h2><label>'+o.nm+'</label><input id="f-name" value="'+esc(ord.name)+'" placeholder="'+o.nmp+'"><label>'+o.ph+'</label><input id="f-phone" type="tel" inputmode="tel" value="'+esc(ord.phone)+'" placeholder="'+o.php+'"><label>'+o.ad+'</label><textarea id="f-addr" rows="2" placeholder="'+o.adp+'">'+esc(ord.addr)+'</textarea><button class="btn pri conf" data-send>'+o.conf+'</button></div>';
  upd();
 }
 function upd(){
@@ -268,7 +270,7 @@ function gal(id){var g=B(id).gallery||[];return [B(id).img].concat(g.length?g:[s
 function showProduct(id){
  if(cur.id!=id){cur.id=id;cur.i=0}
  var t=T[S.lang],g=gal(id);
- document.getElementById("product").innerHTML='<div class="pwrap"><div class="gal" dir="ltr"><div class="track" style="transform:translateX(-'+cur.i*100+'%)">'+g.map(function(s){return '<img src="'+s+'" alt="">'}).join("")+'</div><button class="arr r" data-go="1" aria-label="next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button class="arr l" data-go="-1" aria-label="previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button></div><div class="thumbs" dir="ltr">'+g.map(function(s,k){return '<button data-th="'+k+'" class="'+(k==cur.i?'on':'')+'"><img src="'+s+'" alt=""></button>'}).join("")+'</div><h2>'+t["b"+id]+'</h2><div class="big">'+pr(id)+' '+t.cur+'</div><button class="btn pri chk" data-chk="'+id+'">'+t.chk+'<svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/></svg></button><h3 class="dt">'+t.dtl+'</h3><p class="desc">'+t["d"+id]+'</p></div>';
+ document.getElementById("product").innerHTML='<div class="pwrap"><div class="gal" dir="ltr"><div class="track" style="transform:translateX(-'+cur.i*100+'%)">'+g.map(function(s){return '<img src="'+s+'" alt="">'}).join("")+'</div><button class="arr r" data-go="1" aria-label="next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button class="arr l" data-go="-1" aria-label="previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button></div><div class="thumbs" dir="ltr">'+g.map(function(s,k){return '<button data-th="'+k+'" class="'+(k==cur.i?'on':'')+'"><img src="'+s+'" alt=""></button>'}).join("")+'</div><h2>'+t["b"+id]+'</h2><div class="big">'+pr(id)+' '+t.cur+'</div><div class="prow"><button class="btn pri chk" data-chk="'+id+'">'+t.chk+'<svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/></svg></button><button class="btn add" data-add="'+id+'">'+t.add+'</button></div><h3 class="dt">'+t.dtl+'</h3><p class="desc">'+t["d"+id]+'</p></div>';
 }
 function sync(){var tr=document.querySelector(".track");if(tr)tr.style.transform="translateX(-"+cur.i*100+"%)";var th=document.querySelector(".thumbs");document.querySelectorAll(".thumbs button").forEach(function(b,k){b.classList.toggle("on",k==cur.i);if(k==cur.i&&th){var l=b.offsetLeft-(th.clientWidth-b.offsetWidth)/2;if(th.scrollTo)th.scrollTo({left:l,behavior:"smooth"});else th.scrollLeft=l}})}
 var sw=null;
@@ -311,8 +313,8 @@ function drawRows(){
 }
 function showCart(){
  var o=O[S.lang],c=C[S.lang],ix=S.lang=="ar"?0:1;
- document.getElementById("order").innerHTML='<div class="ocard"><h2>'+o.os+'</h2><div id="crows"></div><hr><div class="ln"><span>'+o.sub+'</span><span id="sb"></span></div><div class="ln"><span>'+o.ship+'</span><span id="sh"></span></div><div class="ln tot"><span>'+o.tot+'</span><span id="tt"></span></div><div class="cod" style="text-align:center">'+o.cod+'</div></div>'+
- '<div class="ocard"><h2>'+o.ci+'</h2><label>'+o.nm+'</label><input id="f-name" value="'+esc(ord.name)+'" placeholder="'+o.nmp+'"><label>'+o.ph+'</label><input id="f-phone" type="tel" inputmode="tel" value="'+esc(ord.phone)+'" placeholder="'+o.php+'"><label>'+o.ad+'</label><textarea id="f-addr" rows="2" placeholder="'+o.adp+'">'+esc(ord.addr)+'</textarea><label>'+o.gv+'</label><div class="dd"><button type="button" class="sel"><span id="gn"></span><span id="gp"></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="list" id="gl" hidden>'+GOV.map(function(g,k){return '<div class="opt" data-g="'+k+'"><span>'+g[ix]+'</span><span>'+money(g[2])+'</span></div>'}).join("")+'</div></div><button class="btn pri conf" data-send>'+o.conf+'</button><button class="btn out" data-cont>'+c.cont+'</button></div>';
+ document.getElementById("order").innerHTML='<div class="ocard"><h2>'+o.os+'</h2><div id="crows"></div><hr><div class="ln"><span>'+o.sub+'</span><span id="sb"></span></div><div class="ln shl"><span>'+o.ship+'</span><div class="dd"><button type="button" class="sel"><span id="gn"></span><span id="gp"></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="list" id="gl" hidden>'+GOV.map(function(g,k){return '<div class="opt" data-g="'+k+'"><span>'+g[ix]+'</span><span>'+money(g[2])+'</span></div>'}).join("")+'</div></div><span id="sh" hidden></span></div><div class="ln tot"><span>'+o.tot+'</span><span id="tt"></span></div><div class="cod" style="text-align:center">'+o.cod+'</div></div>'+
+ '<div class="ocard"><h2>'+o.ci+'</h2><label>'+o.nm+'</label><input id="f-name" value="'+esc(ord.name)+'" placeholder="'+o.nmp+'"><label>'+o.ph+'</label><input id="f-phone" type="tel" inputmode="tel" value="'+esc(ord.phone)+'" placeholder="'+o.php+'"><label>'+o.ad+'</label><textarea id="f-addr" rows="2" placeholder="'+o.adp+'">'+esc(ord.addr)+'</textarea><button class="btn pri conf" data-send>'+o.conf+'</button><button class="btn out" data-cont>'+c.cont+'</button></div>';
  drawRows();upd();
 }
 function sendOrder(){
